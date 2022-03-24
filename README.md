@@ -29,9 +29,9 @@ no shutdown
 end
 ```
 
-Next, we'll enable DHCP, which will take care of handing out IP addresses. As default DNS servers, I decided to use `8.8.8.8` and `4.4.4.4` - Google's DNS servers.
 ### Setting up a DHCP pool
 
+Next, we'll enable DHCP, which will take care of handing out IP addresses. As default DNS servers, I decided to use `8.8.8.8` and `4.4.4.4` - Google's DNS servers. The name of the pool is 'home'.
 
 ```
 config term
@@ -124,6 +124,8 @@ network 192.168.1.0
 
 ### Getting an IP address from the ISP
 
+As the next step, we will set gigabitEthernet 0/0 to be assigned a dynamic IP address. This is meant to simulate an IP address given by an ISP.
+
 ```
 config term
 interface gigabitEthernet 0/0
@@ -133,6 +135,8 @@ end
 ```
 
 ### Setting up NAT
+
+The very last step is to connect the private network to the internet. In order to do so, we need to configure NAT (network address translation) on router R2. We need to include both subnets into the configuration.
 
 ```
 config term
@@ -147,6 +151,8 @@ end
 ```
 
 ### Saving the configuration of the router.
+
+Lastly, we can save the configuration of router R2.
 
 ```
 copy running-config startup-config
