@@ -73,7 +73,7 @@ end
 
 ### Setting up the default route
 
-Lastly, we need to set up a default route, so the router knows where to send packets that are targeted to either of the subnets. This is used, typically, when reaching public servers outside of the local network. 
+Lastly, we need to set up a default route, so the router knows where to send packets which are not being sent to either of the subnets. This is used, typically, when reaching public servers outside of the local network. 
 
 ```
 config term
@@ -95,6 +95,7 @@ copy running-config startup-config
 
 ### Assigning an IP address to interface gigabitEthernet 1/0
 
+To start off, we will set up interface gigabitEthernet 1/0, so we can reach router R2 from `10.10.2.0/27`.
 
 ```
 config term
@@ -103,8 +104,14 @@ ip address 192.168.1.2 255.255.255.252
 no shutdown
 end
 ```
+
+As of now, router R2 is reachable from our private network. However, since there is now reverse route set up yet. Ping will be received but unanswered. This could be verified using WireShark.
+
+<img src="img/03.gif">
+
 ### Setting up RIP
 
+As soon, as RIP is enabled on router R2 as well, ping will come through.
 
 ```
 config term
@@ -112,6 +119,8 @@ router rip
 version 2
 network 192.168.1.0
 ```
+
+<img src="img/04.gif">
 
 ### Getting an IP address from the ISP
 
