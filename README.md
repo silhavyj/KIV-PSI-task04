@@ -93,10 +93,10 @@ Selecting the interface to be configured.
 interface gigabitEthernet 0/0
 ```
 
-Assigning an IP of `192.168.1.1` to the interface. The mask is set to `/31` as there are only two nodes needed.
+Assigning an IP of `192.168.1.1` to the interface. The mask is set to `/30` as there are only two nodes needed.
 
 ```
-ip address 10.10.2.1 255.255.255.224
+ip address 192.168.1.1 255.255.255.252
 ```
 
 
@@ -158,3 +158,70 @@ copy running-config startup-config
 ```
 
 ## Router R2
+
+### Assigning an IP address to interface gigabitEthernet 1/0
+
+Getting into the configuration mode.
+
+```
+config term
+```
+
+Selecting the interface to be configured.
+
+```
+interface gigabitEthernet 1/0
+```
+
+Assigning an IP of `192.168.1.2` to the interface. The mask is set to `/30` as there are only two nodes needed.
+
+```
+ip address 192.168.1.2 255.255.255.252
+```
+
+
+Turning on the interface.
+
+```
+no shutdown
+```
+
+Returning from the configuration mode.
+```
+ctrl+z
+```
+
+---
+
+### Setting up RIP
+
+Getting into the configuration mode.
+
+```
+config term
+```
+
+Getting into RIP configuration.
+```
+router rip
+```
+
+Setting up version 2.
+```
+version 2
+```
+
+Adding network `192.168.1.0` into RIP.
+```
+network 192.168.1.0
+```
+
+Returning from the configuration mode.
+```
+ctrl+z
+```
+
+Saving the configuration of the router.
+```
+copy running-config startup-config
+```
