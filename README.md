@@ -1,3 +1,7 @@
+# Setting up a simple home network
+
+<img src="img/01.png">
+
 - [Router R1](#router-r1)
   * [Assigning an IP address to interface gigabitEthernet 1/0](#assigning-an-ip-address-to-interface-gigabitethernet-1-0)
   * [Setting up a DHCP pool](#setting-up-a-dhcp-pool)
@@ -38,7 +42,7 @@ no shutdown
 
 Returning from the configuration mode.
 ```
-ctrl+z
+end
 ```
 
 Saving the configuration of the router.
@@ -79,7 +83,7 @@ dns-server 8.8.8.8 4.4.4.4
 
 Returning from the configuration mode.
 ```
-ctrl+z
+end
 ```
 
 Saving the configuration of the router.
@@ -118,7 +122,7 @@ no shutdown
 
 Returning from the configuration mode.
 ```
-ctrl+z
+end
 ```
 
 Saving the configuration of the router.
@@ -159,7 +163,7 @@ network 192.168.1.0
 
 Returning from the configuration mode.
 ```
-ctrl+z
+end
 ```
 
 Saving the configuration of the router.
@@ -198,7 +202,7 @@ no shutdown
 
 Returning from the configuration mode.
 ```
-ctrl+z
+end
 ```
 
 Saving the configuration of the router.
@@ -233,7 +237,7 @@ network 192.168.1.0
 
 Returning from the configuration mode.
 ```
-ctrl+z
+end
 ```
 
 Saving the configuration of the router.
@@ -270,7 +274,7 @@ no shutdown
 
 Returning from the configuration mode.
 ```
-ctrl+z
+end
 ```
 
 Saving the configuration of the router.
