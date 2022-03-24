@@ -1,3 +1,13 @@
+- [Router R1](#router-r1)
+  * [Assigning an IP address to interface gigabitEthernet 1/0](#assigning-an-ip-address-to-interface-gigabitethernet-1-0)
+  * [Setting up a DHCP pool](#setting-up-a-dhcp-pool)
+  * [Configure the second interface of the router](#configure-the-second-interface-of-the-router)
+  * [Setting up RIP](#setting-up-rip)
+- [Router R2](#router-r2)
+  * [Assigning an IP address to interface gigabitEthernet 1/0](#assigning-an-ip-address-to-interface-gigabitethernet-1-0-1)
+  * [Setting up RIP](#setting-up-rip-1)
+  * [Getting an IP address from the ISP](#getting-an-ip-address-from-the-isp)
+  * [Setting up NAT](#setting-up-nat)
 ## Router R1
 
 ### Assigning an IP address to interface gigabitEthernet 1/0
@@ -191,6 +201,11 @@ Returning from the configuration mode.
 ctrl+z
 ```
 
+Saving the configuration of the router.
+```
+copy running-config startup-config
+```
+
 ---
 
 ### Setting up RIP
@@ -225,3 +240,44 @@ Saving the configuration of the router.
 ```
 copy running-config startup-config
 ```
+
+---
+
+### Getting an IP address from the ISP
+
+Getting into the configuration mode.
+
+```
+config term
+```
+
+Selecting the interface to be configured.
+
+```
+interface gigabitEthernet 0/0
+```
+
+Obtaining an IP address on the interface through DHCP
+```
+ip address dhcp
+```
+
+Turning on the interface.
+
+```
+no shutdown
+```
+
+Returning from the configuration mode.
+```
+ctrl+z
+```
+
+Saving the configuration of the router.
+```
+copy running-config startup-config
+```
+
+---
+
+### Setting up NAT
