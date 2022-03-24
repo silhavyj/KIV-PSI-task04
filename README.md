@@ -1,5 +1,7 @@
 # Setting up a simple home network
 
+This README goes over a set-up and debugging of a simple home network which is eventually connected to the internet using NAT. The network was built in [gns3](https://www.gns3.com/) using Cisco routers 7200.
+
 <img src="img/01.png">
 
 - [Router R1](#router-r1)
@@ -7,19 +9,21 @@
   * [Setting up a DHCP pool](#setting-up-a-dhcp-pool)
   * [Configure the second interface of the router](#configure-the-second-interface-of-the-router)
   * [Setting up RIP](#setting-up-rip)
-  * [Setting up the default route](#setting-up-the-default-route)
+  * [Saving the configuration of the router.](#saving-the-configuration-of-the-router)
 - [Router R2](#router-r2)
   * [Assigning an IP address to interface gigabitEthernet 1/0](#assigning-an-ip-address-to-interface-gigabitethernet-1-0-1)
   * [Setting up RIP](#setting-up-rip-1)
   * [Getting an IP address from the ISP](#getting-an-ip-address-from-the-isp)
   * [Setting up NAT](#setting-up-nat)
-  * [Saving the configuration of the router.](#saving-the-configuration-of-the-router)
+  * [Saving the configuration of the router.](#saving-the-configuration-of-the-router-1)
+- [Debugging](#debugging)
+  * [Setting up a default route of R1](#setting-up-a-default-route-of-r1)
 
 ## Router R1
 
 ### Assigning an IP address to interface gigabitEthernet 1/0
 
-First of all, we need to configure interface gigabitEthernet 1/0 or router R1, which works as the default gateway for all devices connected to the private network (`10.10.2.0/27`). Mask `255.255.255.224 = 27` allows as many as 30 different devices to be connected to the network.
+First of all, we need to configure interface gigabitEthernet 1/0 or router R1, which works as a default gateway for all devices connected to the private network (`10.10.2.0/27`). Mask `255.255.255.224 = 27` allows as many as 30 different hosts to be connected to the network.
 
 ```
 config term
@@ -31,7 +35,7 @@ end
 
 ### Setting up a DHCP pool
 
-Next, we'll enable DHCP, which will take care of handing out IP addresses. As default DNS servers, I decided to use `8.8.8.8` and `4.4.4.4` - Google's DNS servers. The name of the pool is 'home'.
+Next, we'll enable DHCP, which will take care of handing out IP addresses to the hosts. As default DNS servers, I decided to use `8.8.8.8` and `4.4.4.4` - Google's DNS servers. The name of the pool is 'home'.
 
 ```
 config term
@@ -70,17 +74,6 @@ network 10.10.2.0
 network 192.168.1.0
 end
 ```
-
-### Setting up the default route
-
-Lastly, we need to set up a default route, so the router knows where to send packets which are not being sent to either of the subnets. This is used, typically, when reaching public servers outside of the local network. 
-
-```
-config term
-ip route 0.0.0.0 0.0.0.0 192.168.1.2
-end
-```
-
 ### Saving the configuration of the router.
 
 Before moving on to router R2, we need to save our configuration.
@@ -105,7 +98,7 @@ no shutdown
 end
 ```
 
-As of now, router R2 is reachable from our private network. However, since there is now reverse route set up yet. Ping will be received but unanswered. This could be verified using WireShark.
+As of now, router R2 is reachable from subnet `10.10.2.0/27`. However, since there is now reverse route set up yet. Pings messages will be received but unanswered. This could be verified using WireShark.
 
 <img src="img/03.gif">
 
@@ -156,4 +149,18 @@ Lastly, we can save the configuration of router R2.
 
 ```
 copy running-config startup-config
+```
+
+---
+
+## Debugging
+
+At this point, we should be able to ping any public server such as `google.com` or `stackoverflow.com`. However, we can see that our ping is not coming through. An indication of what the issue might be is that `10.10.2.1` is returning 'Host Unreachable'. This is because the router doesn't know where to send the packets. It only knows of subnets `10.10.2.0/27` and `192.168.0.1/30`. Therefore, we need to set up a default gateway, so it knows where to send the packets which are not being sent to either of the subnets.
+
+### Setting up a default route of R1
+
+```
+config term
+ip route 0.0.0.0 0.0.0.0 192.168.1.2
+end
 ```
