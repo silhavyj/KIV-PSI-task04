@@ -7,312 +7,123 @@
   * [Setting up a DHCP pool](#setting-up-a-dhcp-pool)
   * [Configure the second interface of the router](#configure-the-second-interface-of-the-router)
   * [Setting up RIP](#setting-up-rip)
+  * [Setting up the default route](#setting-up-the-default-route)
 - [Router R2](#router-r2)
   * [Assigning an IP address to interface gigabitEthernet 1/0](#assigning-an-ip-address-to-interface-gigabitethernet-1-0-1)
   * [Setting up RIP](#setting-up-rip-1)
   * [Getting an IP address from the ISP](#getting-an-ip-address-from-the-isp)
   * [Setting up NAT](#setting-up-nat)
+  * [Saving the configuration of the router.](#saving-the-configuration-of-the-router)
+
 ## Router R1
 
 ### Assigning an IP address to interface gigabitEthernet 1/0
 
-Getting into the configuration mode.
+First of all, we need to configure interface gigabitEthernet 1/0 or router R1, which works as the default gateway for all devices connected to the private network (`10.10.2.0/27`). Mask `255.255.255.224 = 27` allows as many as 30 different devices to be connected to the network.
 
 ```
 config term
-```
-
-Selecting the interface to be configured.
-
-```
 interface gigabitEthernet 1/0
-```
-
-Assigning an IP of `10.10.2.1` to the interface. The mask was chosen to be `/27`. It allows as many as 30 hosts to be connected to this network.
-
-```
 ip address 10.10.2.1 255.255.255.224
-```
-
-Turning on the interface.
-
-```
 no shutdown
-```
-
-Returning from the configuration mode.
-```
 end
 ```
 
-Saving the configuration of the router.
-```
-copy running-config startup-config
-```
-
----
-
+Next, we'll enable DHCP, which will take care of handing out IP addresses. As default DNS servers, I decided to use `8.8.8.8` and `4.4.4.4` - Google's DNS servers.
 ### Setting up a DHCP pool
 
-Getting into the configuration mode.
 
 ```
 config term
-```
-
-Creating a new DHCP pool named home.
-
-```
 ip dhcp pool home
-```
-
-Selecting a network for the DHCP pool
-```
 network 10.10.2.0 255.255.255.224
-```
-
-Setting up the default router (gateway).
-```
 default-router 10.10.2.1
-```
-
-Adding default DNS server for resolving addresses.
-```
 dns-server 8.8.8.8 4.4.4.4
-```
-
-Returning from the configuration mode.
-```
 end
 ```
 
-Saving the configuration of the router.
+At this point, both PC_1 and PC_2 should be assigned an IP address and able to reach as far as `10.10.2.1` (router R1).
 
-```
-copy running-config startup-config
-```
-
----
+<img src="img/02.gif">
 
 ### Configure the second interface of the router
 
-Getting into the configuration mode.
+Now we can move on to configuring the other interface of router R1. This interface will be assigned a static IP address of `192.168.1.1`. The mask is set to `255.255.255.252` since there are only two hosts needed within this subnet.
 
 ```
 config term
-```
-
-Selecting the interface to be configured.
-```
 interface gigabitEthernet 0/0
-```
-
-Assigning an IP of `192.168.1.1` to the interface. The mask is set to `/30` as there are only two nodes needed.
-
-```
 ip address 192.168.1.1 255.255.255.252
-```
-
-
-Turning on the interface.
-
-```
 no shutdown
-```
-
-Returning from the configuration mode.
-```
 end
 ```
-
-Saving the configuration of the router.
-```
-copy running-config startup-config
-```
-
----
 
 ### Setting up RIP
 
-Getting into the configuration mode.
+In order to reach `192.168.1.0/30` from `10.10.2.0/27`, we'll set up RIPv2 which will take care of dynamic routing.
 
 ```
 config term
-```
-
-Getting into RIP configuration.
-```
 router rip
-```
-
-Setting up version 2.
-```
 version 2
-```
-
-Adding network `10.10.2.0` into RIP.
-```
 network 10.10.2.0
-```
-
-
-Adding network `192.168.1.0` into RIP.
-```
 network 192.168.1.0
-```
-
-Returning from the configuration mode.
-```
 end
 ```
 
-Saving the configuration of the router.
+### Setting up the default route
+
+Lastly, we need to set up a default route, so the router knows where to send packets that are targeted to either of the subnets. This is used, typically, when reaching public servers outside of the local network. 
+
+```
+config term
+ip route 0.0.0.0 0.0.0.0 192.168.1.2
+end
+```
+
+### Saving the configuration of the router.
+
+Before moving on to router R2, we need to save our configuration.
+
 ```
 copy running-config startup-config
 ```
 
 ---
-
-### Setting up the default route
-
-Getting into the configuration mode.
-
-```
-config term
-```
-
-Send "unknown" packets through router R2 (`192.168.1.2`)
-
-```
-ip route 0.0.0.0 0.0.0.0 192.168.1.2
-```
-
-Returning from the configuration mode.
-```
-end
-```
-
-Saving the configuration of the router.
-```
-copy running-config startup-config
-```
 
 ## Router R2
 
 ### Assigning an IP address to interface gigabitEthernet 1/0
 
-Getting into the configuration mode.
 
 ```
 config term
-```
-
-Selecting the interface to be configured.
-
-```
 interface gigabitEthernet 1/0
-```
-
-Assigning an IP of `192.168.1.2` to the interface. The mask is set to `/30` as there are only two nodes needed.
-
-```
 ip address 192.168.1.2 255.255.255.252
-```
-
-
-Turning on the interface.
-
-```
 no shutdown
-```
-
-Returning from the configuration mode.
-```
 end
 ```
-
-Saving the configuration of the router.
-```
-copy running-config startup-config
-```
-
----
-
 ### Setting up RIP
 
-Getting into the configuration mode.
 
 ```
 config term
-```
-
-Getting into RIP configuration.
-```
 router rip
-```
-
-Setting up version 2.
-```
 version 2
-```
-
-Adding network `192.168.1.0` into RIP.
-```
 network 192.168.1.0
 ```
 
-Returning from the configuration mode.
-```
-end
-```
-
-Saving the configuration of the router.
-```
-copy running-config startup-config
-```
-
----
-
 ### Getting an IP address from the ISP
-
-Getting into the configuration mode.
 
 ```
 config term
-```
-
-Selecting the interface to be configured.
-
-```
 interface gigabitEthernet 0/0
-```
-
-Obtaining an IP address on the interface through DHCP
-```
 ip address dhcp
-```
-
-Turning on the interface.
-
-```
 no shutdown
-```
-
-Returning from the configuration mode.
-```
 end
 ```
 
-Saving the configuration of the router.
-```
-copy running-config startup-config
-```
-
----
-
 ### Setting up NAT
-
-Getting into the configuration mode.
 
 ```
 config term
@@ -323,4 +134,11 @@ ip nat inside
 interface gigabitEthernet 0/0
 ip nat outside
 ip nat inside source list 100 interface GigabitEthernet0/0 overload
+end
+```
+
+### Saving the configuration of the router.
+
+```
+copy running-config startup-config
 ```
