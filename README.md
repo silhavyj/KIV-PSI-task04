@@ -171,6 +171,32 @@ Saving the configuration of the router.
 copy running-config startup-config
 ```
 
+---
+
+### Setting up the default route
+
+Getting into the configuration mode.
+
+```
+config term
+```
+
+Send "unknown" packets through router R2 (`192.168.1.2`)
+
+```
+ip route 0.0.0.0 0.0.0.0 192.168.1.2
+```
+
+Returning from the configuration mode.
+```
+end
+```
+
+Saving the configuration of the router.
+```
+copy running-config startup-config
+```
+
 ## Router R2
 
 ### Assigning an IP address to interface gigabitEthernet 1/0
@@ -285,3 +311,16 @@ copy running-config startup-config
 ---
 
 ### Setting up NAT
+
+Getting into the configuration mode.
+
+```
+config term
+access-list 100 permit ip 192.168.1.0 0.0.0.3 any
+access-list 100 permit ip 10.10.2.0 0.0.0.31 any
+interface gigabitEthernet 1/0
+ip nat inside
+interface gigabitEthernet 0/0
+ip nat outside
+ip nat inside source list 100 interface GigabitEthernet0/0 overload
+```
