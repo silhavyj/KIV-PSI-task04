@@ -1,6 +1,6 @@
 # Setting up a simple home network
 
-This README goes over a set-up and debugging of a simple home network which is eventually connected to the internet using NAT. The network was built in [gns3](https://www.gns3.com/) using Cisco routers 7200.
+This README goes over the setup and debugging of a simple home network that is eventually connected to the internet using NAT. The network was built in [gns3](https://www.gns3.com/) using Cisco routers 7200.
 
 <img src="img/01.png">
 
@@ -9,15 +9,16 @@ This README goes over a set-up and debugging of a simple home network which is e
   * [Setting up a DHCP pool](#setting-up-a-dhcp-pool)
   * [Configure the second interface of the router](#configure-the-second-interface-of-the-router)
   * [Setting up RIP](#setting-up-rip)
-  * [Saving the configuration of the router.](#saving-the-configuration-of-the-router)
+  * [Saving the configuration of the router](#saving-the-configuration-of-the-router)
 - [Router R2](#router-r2)
   * [Assigning an IP address to interface gigabitEthernet 1/0](#assigning-an-ip-address-to-interface-gigabitethernet-1-0-1)
   * [Setting up RIP](#setting-up-rip-1)
   * [Getting an IP address from the ISP](#getting-an-ip-address-from-the-isp)
   * [Setting up NAT](#setting-up-nat)
-  * [Saving the configuration of the router.](#saving-the-configuration-of-the-router-1)
+  * [Saving the configuration of the router](#saving-the-configuration-of-the-router-1)
 - [Debugging](#debugging)
   * [Setting up a default route of R1](#setting-up-a-default-route-of-r1)
+  * [Saving the configuration of the router](#saving-the-configuration-of-the-router-2)
 
 ## Router R1
 
@@ -98,7 +99,7 @@ no shutdown
 end
 ```
 
-As of now, router R2 is reachable from subnet `10.10.2.0/27`. However, since there is now reverse route set up yet, ping messages will not be sent back to the source (PC_1). This could be verified using WireShark.
+As of now, router R2 is reachable from subnet `10.10.2.0/27`. However, since there is no reverse route set up yet, ping messages will not be sent back to the source (PC_1). This could be verified using WireShark.
 
 <img src="img/03.gif">
 
