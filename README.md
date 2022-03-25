@@ -23,7 +23,7 @@ This README goes over a set-up and debugging of a simple home network which is e
 
 ### Assigning an IP address to interface gigabitEthernet 1/0
 
-First of all, we need to configure interface gigabitEthernet 1/0 or router R1, which works as a default gateway for all devices connected to the private network (`10.10.2.0/27`). Mask `255.255.255.224 = 27` allows as many as 30 different hosts to be connected to the network.
+First of all, we need to configure interface gigabitEthernet 1/0 of router R1, which works as a default gateway for all devices connected to the private network (`10.10.2.0/27`). Mask `255.255.255.224 = 27` allows as many as 30 different hosts to be connected to the network.
 
 ```
 config term
@@ -35,7 +35,7 @@ end
 
 ### Setting up a DHCP pool
 
-Next, we'll enable DHCP, which will take care of handing out IP addresses to the hosts. As default DNS servers, I decided to use `8.8.8.8` and `4.4.4.4` - Google's DNS servers. The name of the pool is 'home'.
+Next, we'll enable DHCP, which will take care of handing out IP addresses to the hosts. As default DNS servers, I decided to use `8.8.8.8` and `4.4.4.4` - Google's DNS servers. The name of the DHCP pool is 'home'.
 
 ```
 config term
@@ -74,7 +74,7 @@ network 10.10.2.0
 network 192.168.1.0
 end
 ```
-### Saving the configuration of the router.
+### Saving the configuration of the router
 
 Before moving on to router R2, we need to save our configuration.
 
@@ -98,13 +98,13 @@ no shutdown
 end
 ```
 
-As of now, router R2 is reachable from subnet `10.10.2.0/27`. However, since there is now reverse route set up yet. Pings messages will be received but unanswered. This could be verified using WireShark.
+As of now, router R2 is reachable from subnet `10.10.2.0/27`. However, since there is now reverse route set up yet, ping messages will not be sent back to the source (PC_1). This could be verified using WireShark.
 
 <img src="img/03.gif">
 
 ### Setting up RIP
 
-As soon, as RIP is enabled on router R2 as well, ping will come through.
+As soon, as RIP is enabled on router R2 as well, the router will start replying to the ping messages.
 
 ```
 config term
