@@ -111,6 +111,7 @@ config term
 router rip
 version 2
 network 192.168.1.0
+end
 ```
 
 <img src="img/04.gif">
@@ -126,6 +127,8 @@ ip address dhcp
 no shutdown
 end
 ```
+
+<img src="img/05.gif">
 
 ### Setting up NAT
 
@@ -143,7 +146,7 @@ ip nat inside source list 100 interface GigabitEthernet0/0 overload
 end
 ```
 
-### Saving the configuration of the router.
+### Saving the configuration of the router
 
 Lastly, we can save the configuration of router R2.
 
@@ -155,7 +158,9 @@ copy running-config startup-config
 
 ## Debugging
 
-At this point, we should be able to ping any public server such as `google.com` or `stackoverflow.com`. However, we can see that our ping is not coming through. An indication of what the issue might be is that `10.10.2.1` is returning 'Host Unreachable'. This is because the router doesn't know where to send the packets. It only knows of subnets `10.10.2.0/27` and `192.168.0.1/30`. Therefore, we need to set up a default gateway, so it knows where to send the packets which are not being sent to either of the subnets.
+At this point, we should be able to ping any public server such as `google.com` or `stackoverflow.com`. However, we can see that our ping is not coming through. An indication of what the issue might be is that `10.10.2.1` is returning 'Destination Host Unreachable'. This is because the router doesn't know where to send the packets. It only knows of subnets `10.10.2.0/27` and `192.168.0.1/30`. Therefore, we need to set up a default gateway, so it knows where to send the packets which are not being sent to either of the subnets.
+
+<img src="img/06.gif">
 
 ### Setting up a default route of R1
 
@@ -163,4 +168,14 @@ At this point, we should be able to ping any public server such as `google.com` 
 config term
 ip route 0.0.0.0 0.0.0.0 192.168.1.2
 end
+```
+
+<img src="img/07.gif">
+
+### Saving the configuration of the router
+
+Finally, we can re-save the configuration of router R1.
+
+```
+copy running-config startup-config
 ```
